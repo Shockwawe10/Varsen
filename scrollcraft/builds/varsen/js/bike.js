@@ -22,7 +22,10 @@ export const BUILD = {
 /** The build constants for one frame size: everything not on the chart stays as on the 56; the saddle follows sizes.js. */
 export const buildFor = (chart, inseamCm = null) => ({ ...BUILD, saddleHeight: saddleHeight(chart, inseamCm) });
 // 12-speed chain and sprocket teeth (m): a 3.8 mm roller rests in a 4.0 mm seat; 1.6 mm teeth run between inner plates 2.2 mm apart
-const CHAIN = { roller: 0.0038, seat: 0.004, tip: 0.003, tipW: 0.0016, teeth: 0.0016, inner: 0.0015, outer: 0.0023, plate: 0.0008, rollerLen: 0.0022 };
+// plates 0.8 mm thick; pins 3.3 mm across, their heads 0.07 mm proud of the outer plates (the
+// neighbouring cogs sit 0.1 mm off the outer plates: 0.2 mm proud reached into the 14T's teeth, qa overlap scan)
+const CHAIN = { roller: 0.0038, seat: 0.004, tip: 0.003, tipW: 0.0016, teeth: 0.0016, inner: 0.0015, outer: 0.0023, plate: 0.0008, rollerLen: 0.0022,
+  pin: 0.00165, pinProud: 0.00007 };
 // dropout plates (m): inner face 0.2 mm outside the hub's end face, 7 mm thick, a 6.3 mm half-width slot for the 6 mm axle
 const DROPOUT = { gap: 0.0002, thick: 0.007, bevel: 0.001, slot: 0.0063 };
 const rad = d => d * Math.PI / 180, TAU = Math.PI * 2, MM = 0.001;
@@ -88,8 +91,10 @@ async function makeTextures() {                   // one texture per slice: canv
   // A line of text that fills its strip: the measured cap height is `cap` of the texture's height, the line is
   // centred on it, and it is narrowed only if it would overrun 94% of the width. The texture has the strip's own
   // aspect, so the letters are not stretched when it is mapped on.
-  const word = (text, aspect, cap, track, fill) => {
-    const w = 2048, h = Math.round(w / aspect);
+  // w: the texture's width. A near-square badge at 2048 was a 2048 x 1567 canvas, 12 MB to draw and upload on the main
+  // thread for a 34 mm badge (Lighthouse mobile TBT +250 ms); the long strips need the width, the badge does not.
+  const word = (text, aspect, cap, track, fill, w = 2048) => {
+    const h = Math.round(w / aspect);
     const t = canvasTexture(w, h, (x) => {
       x.clearRect(0, 0, w, h); x.fillStyle = fill; x.textAlign = 'center'; x.textBaseline = 'alphabetic';
       const set = size => { x.font = `800 ${size}px "Archivo Expanded", sans-serif`; x.letterSpacing = `${(size * track).toFixed(1)}px`; };
@@ -104,12 +109,14 @@ async function makeTextures() {                   // one texture per slice: canv
   const [r0, r1] = rimStrip(), rimAspect = ((r0 + r1) / 2 * 2 * DECAL.rimArc) / (r1 - r0);
   await slice(); const decal = word('VARSEN', DECAL.tube[0] / DECAL.tube[1], 0.62, 0.16, LOOK.decalInk);
   await slice(); const rimDecal = word('VARSEN · CARBON 45', rimAspect, 0.6, 0.08, LOOK.rimInk);
+  await slice(); const badge = word('R1', DECAL.badge[0] / DECAL.badge[1], 0.7, 0.02, LOOK.decalInk, 512);
   await slice();
-  return { tread, tape, decal, rimDecal };
+  return { tread, tape, decal, rimDecal, badge };
 }
 /** Decal sizes, shared by the textures and the geometry: the down-tube wordmark (length, height in metres), the rim
-    strip's half-arc (radians) and its inset from the spoke bed and the hook (metres). */
-const DECAL = { tube: [0.3, 0.034], rimArc: 0.62, rimInset: [0.012, 0.008] };
+    strip's half-arc (radians) and its inset from the spoke bed and the hook (metres), and the model badge on the front
+    of the head tube (across, along the tube; it fits the shortest head tube, size 44's 93 mm). */
+const DECAL = { tube: [0.3, 0.034], rimArc: 0.62, rimInset: [0.012, 0.008], badge: [0.034, 0.026] };
 function rimStrip() {
   const flange = CHART.bsd / 2 * MM + BUILD.rimFlange * MM, bed = flange - BUILD.rimDepth * MM;
   return [bed + DECAL.rimInset[0], flange - DECAL.rimInset[1]];
@@ -131,14 +138,15 @@ export async function makeMaterials() {
     // Satin metals for the chain and the rotors: a mirror metal in a dark studio reflects black at most angles and the
     // part goes dark as the bike turns. Part diffuse, part metal: the key light reads on them from every side.
     chainOuter: new THREE.MeshStandardMaterial({ color: 0xccd0d5, roughness: 0.38, metalness: 0.3 }),
-    chainInner: new THREE.MeshStandardMaterial({ color: 0xa6abb1, roughness: 0.42, metalness: 0.3 }),
+    chainInner: new THREE.MeshStandardMaterial({ color: 0x8e9399, roughness: 0.42, metalness: 0.3 }),   // a shade under the outer: the links alternate
+    chainPin: new THREE.MeshStandardMaterial({ color: 0x6a6f76, roughness: 0.28, metalness: 0.55 }),    // darker polished rivets: dots on the plates
     chainRoller: new THREE.MeshStandardMaterial({ color: 0x7c8086, roughness: 0.45, metalness: 0.3 }),
     rotor: new THREE.MeshStandardMaterial({ color: 0xd2d6da, roughness: 0.32, metalness: 0.35 }),
     rubber: new THREE.MeshStandardMaterial({ color: 0x161616, roughness: 0.88, metalness: 0, bumpMap: T.tread, bumpScale: 1.2 }),
     tape: new THREE.MeshStandardMaterial({ color: 0x1b1c1e, roughness: 0.82, metalness: 0, bumpMap: T.tape, bumpScale: 1.5 }),
     hood: new THREE.MeshStandardMaterial({ color: 0x19191a, roughness: 0.72, metalness: 0 }),
     saddle: new THREE.MeshStandardMaterial({ color: 0x1c1d1f, roughness: 0.6, metalness: 0 }),
-    decal: decal(T.decal), rimDecal: decal(T.rimDecal),
+    decal: decal(T.decal), rimDecal: decal(T.rimDecal), badge: decal(T.badge),
   };
   // Fade twins use alpha hashing (a stochastic dissolve in the opaque pass), not blending: blended low-opacity
   // geometry rendered with 1-level run-to-run differences on GPU (qa/probe/gl-determinism.mjs); hashing is per-pixel deterministic.
@@ -239,6 +247,29 @@ function hullShape(c1, r1, c2, r2) {
   s.absarc(c2.x, c2.y, r2, ang - beta, ang + beta, false);
   return s;
 }
+/** A chain plate: round ends of radius r on pins one pitch apart, drawn in at the middle to half-height `waist` by curves
+    that leave each end arc on its own tangent (a figure of eight, as real plates are, not a capsule). */
+function linkShape(pitch, r, waist, a = rad(118)) {
+  const s = new THREE.Shape(), h = pitch / 2, tx = -Math.sin(a), ty = Math.cos(a);     // (tx, ty): the arc's tangent at a
+  const x0 = h + r * Math.cos(a), y0 = r * Math.sin(a), k = (y0 - waist) / (0.75 * Math.abs(ty)), cx = x0 + tx * k, cy = y0 + ty * k;
+  s.absarc(h, 0, r, -a, a, false);
+  s.bezierCurveTo(cx, cy, -cx, cy, -x0, y0);       // a cubic's midpoint sits 3/4 of the way to its controls' height
+  s.absarc(-h, 0, r, Math.PI - a, Math.PI + a, false);
+  s.bezierCurveTo(-cx, -cy, cx, -cy, x0, -y0);
+  return s;
+}
+/** The chain's parts, the same on every size: built once and shared by all seven bikes (nothing disposes bike geometry). */
+let CHAIN_GEO = null;
+function chainGeometry() {
+  if (CHAIN_GEO) return CHAIN_GEO;
+  const pitch = BUILD.pitch * MM, plateG = (r, waist) => extrude(linkShape(pitch, r, waist), CHAIN.plate, 0, 5);
+  const rollerG = new THREE.CylinderGeometry(CHAIN.roller, CHAIN.roller, CHAIN.rollerLen, 14, 1, true); rollerG.rotateX(Math.PI / 2);
+  const [pr, pf, ph] = [CHAIN.pin, CHAIN.pin + 0.0003, CHAIN.pinProud];
+  const pinG = new THREE.LatheGeometry([[pf, 0], [pr, ph * 0.7], [pr * 0.88, ph], [CHAIN.pin * 0.5, ph], [0, ph * 0.55]].map(([x, y]) => new THREE.Vector2(x, y)), 10);
+  pinG.rotateX(Math.PI / 2);                        // lathe axis y -> z; the face points +z, the foot sits at z = 0
+  // (the profile runs foot to centre, as LatheGeometry winds it: drawn centre to foot, every face pointed inward and was culled)
+  return (CHAIN_GEO = { outerG: plateG(0.0043, 0.0032), innerG: plateG(0.0039, 0.0029), rollerG, pinG });
+}
 const extrude = (shapes, depth, bevel = 0, curveSegments = 12) => {
   const g = new THREE.ExtrudeGeometry(shapes, { depth, bevelEnabled: bevel > 0, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 2, curveSegments });
   g.translate(0, 0, -depth / 2); return g;
@@ -318,7 +349,19 @@ async function buildFrame(J, M) {                 // origin = BB
   const dtA = P('DTH'), dtB = P('BB'), dtDir = new THREE.Vector3().subVectors(dtA, dtB);
   // aero main triangle: tapered head tube, deep down tube that widens into the BB, truncated seat tube, flattened top tube
   // head tube: from its bottom face at HTB (the fork crown docks under it) to the headset cover 9 mm above HTT
-  g.add(profTube(along('HTB', 0), along('HTT', -9), t => [lerp(0.031, 0.027, t) - 0.0025 * Math.sin(Math.PI * t), lerp(0.0255, 0.0215, t)], M.paint, 'headTube', { n: 2.3, segs: 12, radial: 28 }));
+  const htA = along('HTB', 0), htB = along('HTT', -9), htW = t => lerp(0.031, 0.027, t) - 0.0025 * Math.sin(Math.PI * t), htH = t => lerp(0.0255, 0.0215, t);
+  g.add(profTube(htA, htB, t => [htW(t), htH(t)], M.paint, 'headTube', { n: 2.3, segs: 12, radial: 28 }));
+  // the model badge on the front of the head tube, read from ahead: every vertex is set onto the tube's own section
+  // (half-depth htW in the frame plane, half-width htH across, exponent 2.3), 0.7 mm proud, so it wraps the curve
+  {
+    const len = htA.distanceTo(htB), up = htB.clone().sub(htA).normalize(), fwd = new THREE.Vector3(up.y, -up.x, 0), tC = 0.56;
+    const b = mesh(new THREE.PlaneGeometry(...DECAL.badge, 24, 8), M.badge, 'badge'), pos = b.geometry.attributes.position, p = new THREE.Vector3();
+    for (let i = 0; i < pos.count; i++) {          // the plane's x runs to the viewer's right, which is the bike's left (-z)
+      const t = tC + pos.getY(i) / len, z = -pos.getX(i), u = htW(t) * Math.max(0, 1 - Math.abs(z / htH(t)) ** 2.3) ** (1 / 2.3) + 0.0007;
+      p.copy(htA).addScaledVector(up, t * len).addScaledVector(fwd, u).setZ(z); pos.setXYZ(i, p.x, p.y, p.z);
+    }
+    b.geometry.computeVertexNormals(); g.add(b);
+  }
   await slice();
   g.add(profTube(P('STT').lerp(P('BB'), 0.04), P('HTT').lerp(P('HTB'), 0.12), t => [lerp(0.0145, 0.0165, t), lerp(0.0165, 0.0155, t)], M.paint, 'topTube', { n: 2.6 }),
     profTube(dtA, dtB, t => [lerp(0.0245, 0.031, t), lerp(0.0195, 0.03, sm(t))], M.paint, 'downTube', { n: 2.8, segs: 14, radial: 28 }));
@@ -578,9 +621,10 @@ async function buildDrivetrain(J, M, CH) {        // origin = BB (yields between
   // Its own group: it fades in last, once the cranks have stopped (STORYBOARD 2, S4).
   const chain = new THREE.Group(); chain.name = 'chain'; chain.userData.body = true; g.add(chain);
   const pins = CH.pins, pitch = BUILD.pitch * MM, RA = V(...J.RA), jr = pitchRadius(11);
-  const outerG = extrude(hullShape(new THREE.Vector2(-pitch / 2, 0), 0.0043, new THREE.Vector2(pitch / 2, 0), 0.0043), CHAIN.plate, 0, 10);
-  const innerG = extrude(hullShape(new THREE.Vector2(-pitch / 2, 0), 0.0039, new THREE.Vector2(pitch / 2, 0), 0.0039), CHAIN.plate, 0, 10);
-  const rollerG = new THREE.CylinderGeometry(CHAIN.roller, CHAIN.roller, CHAIN.rollerLen, 12); rollerG.rotateX(Math.PI / 2);
+  // waisted plates (figure of eight), 8.6 / 7.8 mm at the ends and 0.8 mm thick. Kept lean: 224 plates and 224 rivets are
+  // drawn in every pass, and on software WebGL every triangle is main-thread time (a rounded edge, 10 curve steps and
+  // 20-sided rivets took the chain from 42k to 120k triangles and the first frame up 60 ms under Lighthouse).
+  const { outerG, innerG, rollerG, pinG } = chainGeometry();
   const plates = [['chainOuter', outerG, M.chainOuter, CHAIN.outer, 0], ['chainInner', innerG, M.chainInner, CHAIN.inner, 1]];
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), one = new THREE.Vector3(1, 1, 1);
   for (const [name, geo, mat, off, parity] of plates) {
@@ -595,6 +639,15 @@ async function buildDrivetrain(J, M, CH) {        // origin = BB (yields between
   const rollers = new THREE.InstancedMesh(rollerG, M.chainRoller, pins.length); rollers.name = 'chainRoller';
   pins.forEach((p, i) => rollers.setMatrixAt(i, m4.compose(new THREE.Vector3(p.x, p.y, zc), q.identity(), one)));
   rollers.instanceMatrix.needsUpdate = true; rollers.computeBoundingSphere(); rollers.computeBoundingBox(); chain.add(rollers);
+  // rivet heads: every pin stands just proud of the outer plates on both sides, flared at its foot, hollow in its face;
+  // darker steel than the plates, so they read as rivets (CHAIN.pinProud: under the 0.1 mm to the neighbouring cogs)
+  const pinsM = new THREE.InstancedMesh(pinG, M.chainPin, pins.length * 2); pinsM.name = 'chainPin';
+  const face = CHAIN.outer + CHAIN.plate / 2, flip = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI);
+  pins.forEach((p, i) => {
+    pinsM.setMatrixAt(2 * i, m4.compose(new THREE.Vector3(p.x, p.y, zc + face), q.identity(), one));
+    pinsM.setMatrixAt(2 * i + 1, m4.compose(new THREE.Vector3(p.x, p.y, zc - face), flip, one));
+  });
+  pinsM.instanceMatrix.needsUpdate = true; pinsM.computeBoundingSphere(); pinsM.computeBoundingBox(); chain.add(pinsM);
   await slice();
   // rear derailleur: hanger, knuckle, parallelogram, cage plates, pulleys (positions from solveChain: the cage takes up the slack)
   const U = CH.U, Lw = CH.Lw, rearOut = BUILD.rearOLD / 2 * MM + DROPOUT.gap + DROPOUT.thick;

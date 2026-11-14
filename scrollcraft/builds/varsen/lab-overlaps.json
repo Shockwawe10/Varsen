@@ -1,12 +1,12 @@
 {
  "44": {
-  "ms": 431,
+  "ms": 459,
   "samples": 1,
   "pairTests": 66,
   "bodies": [
    {
     "name": "frame",
-    "triangles": 14812
+    "triangles": 15196
    },
    {
     "name": "fork",
@@ -42,7 +42,7 @@
    },
    {
     "name": "drivetrain/chain",
-    "triangles": 42112
+    "triangles": 47040
    },
    {
     "name": "handlebar",
@@ -118,13 +118,13 @@
   ]
  },
  "49": {
-  "ms": 436,
+  "ms": 458,
   "samples": 1,
   "pairTests": 66,
   "bodies": [
    {
     "name": "frame",
-    "triangles": 14812
+    "triangles": 15196
    },
    {
     "name": "fork",
@@ -160,7 +160,7 @@
    },
    {
     "name": "drivetrain/chain",
-    "triangles": 42112
+    "triangles": 47040
    },
    {
     "name": "handlebar",
@@ -236,13 +236,13 @@
   ]
  },
  "52": {
-  "ms": 433,
+  "ms": 450,
   "samples": 1,
   "pairTests": 66,
   "bodies": [
    {
     "name": "frame",
-    "triangles": 14812
+    "triangles": 15196
    },
    {
     "name": "fork",
@@ -278,7 +278,7 @@
    },
    {
     "name": "drivetrain/chain",
-    "triangles": 42112
+    "triangles": 47040
    },
    {
     "name": "handlebar",
@@ -354,13 +354,13 @@
   ]
  },
  "54": {
-  "ms": 410,
+  "ms": 442,
   "samples": 1,
   "pairTests": 66,
   "bodies": [
    {
     "name": "frame",
-    "triangles": 14812
+    "triangles": 15196
    },
    {
     "name": "fork",
@@ -396,7 +396,7 @@
    },
    {
     "name": "drivetrain/chain",
-    "triangles": 42112
+    "triangles": 47040
    },
    {
     "name": "handlebar",
@@ -472,13 +472,13 @@
   ]
  },
  "56": {
-  "ms": 8796,
+  "ms": 9301,
   "samples": 5699,
   "pairTests": 70309,
   "bodies": [
    {
     "name": "frame",
-    "triangles": 14812
+    "triangles": 15196
    },
    {
     "name": "fork",
@@ -514,7 +514,7 @@
    },
    {
     "name": "drivetrain/chain",
-    "triangles": 42112
+    "triangles": 47040
    },
    {
     "name": "handlebar",
@@ -598,13 +598,13 @@
   ]
  },
  "58": {
-  "ms": 427,
+  "ms": 472,
   "samples": 1,
   "pairTests": 66,
   "bodies": [
    {
     "name": "frame",
-    "triangles": 14812
+    "triangles": 15196
    },
    {
     "name": "fork",
@@ -640,7 +640,7 @@
    },
    {
     "name": "drivetrain/chain",
-    "triangles": 42112
+    "triangles": 47040
    },
    {
     "name": "handlebar",
@@ -716,13 +716,13 @@
   ]
  },
  "61": {
-  "ms": 394,
+  "ms": 443,
   "samples": 1,
   "pairTests": 66,
   "bodies": [
    {
     "name": "frame",
-    "triangles": 14812
+    "triangles": 15196
    },
    {
     "name": "fork",
@@ -758,7 +758,7 @@
    },
    {
     "name": "drivetrain/chain",
-    "triangles": 42112
+    "triangles": 47040
    },
    {
     "name": "handlebar",

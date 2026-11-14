@@ -980,7 +980,7 @@ const yourSize = $$('[data-your-size]'), yoursCap = $('[data-yours-cap]');
 function setSheet(c) {
   for (const k of ['stack', 'reach', 'ett', 'seatTube', 'standover', 'wheelbase', 'headAngle', 'trail']) sheet[k].textContent = c[k];
   for (const e of yourSize) e.textContent = c.size;
-  if (yoursCap) yoursCap.textContent = `Plate 4. Size ${c.size}, rebuilt from its chart.`;
+  if (yoursCap) yoursCap.textContent = `Plate 4. Size ${c.size}, drawn to scale.`;
 }
 async function choose(size) {
   const c = BY_SIZE[size]; if (!c) return;
@@ -1004,8 +1004,8 @@ heightIn.addEventListener('input', () => {
     if (!heightIn.value) { heightOut.textContent = 'Or pick a size below.'; return; }
     if (!(h >= 120 && h <= 230)) { heightOut.textContent = 'Give your height in centimetres.'; return; }
     const fit = sizesForHeight(h);
-    if (!fit.length) { heightOut.textContent = `The reference chart runs from ${SIZES[0].heightCm[0]} to ${SIZES[SIZES.length - 1].heightCm[1]} cm. A fitting will size you.`; return; }
-    if (fit.length === 1) heightOut.textContent = `At ${h} cm the reference chart puts you on a ${fit[0]}.`;
+    if (!fit.length) { heightOut.textContent = `The size chart runs from ${SIZES[0].heightCm[0]} to ${SIZES[SIZES.length - 1].heightCm[1]} cm. A fitting will size you.`; return; }
+    if (fit.length === 1) heightOut.textContent = `At ${h} cm the size chart puts you on a ${fit[0]}.`;
     else { heightOut.textContent = `At ${h} cm you sit between a ${fit[0]} and a ${fit[1]}. A fitting decides.`; for (const r of radios) if (+r.value === fit[1]) r.classList.add('is-suggested'); }
     choose(fit[0]);
   }, 260);

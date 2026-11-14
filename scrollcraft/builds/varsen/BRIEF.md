@@ -53,15 +53,20 @@ link that opens the calendar in a new tab, the chosen size added to it as a1.
 
 ## Honesty rules (from "trusted")
 
-- Real numbers only, each with its source. Geometry for all seven sizes: Bike Insights' listing of
-  the Specialized Tarmac SL7 frameset, model year 2022.
-- Rider height to size: a retailer's reference chart (Bike Mart), which the page labels as a
-  reference and not the maker's. Between ranges, the page shows both sizes and says a fitting decides.
+**2026-11-14, the owner:** "every text on the website, I want everything to be established as it was the
+real product, not as some demo or something like that ... I wanted to show that people are looking at the
+product that can be sold." So the page speaks as the brand selling the R1: no "concept" or "portfolio"
+line, no talk of the model, the browser or the chart it is built from, no source credits on the page.
+What still holds:
+
+- Real numbers only. Their sources stay recorded here: geometry for all seven sizes from Bike Insights'
+  listing of the Specialized Tarmac SL7 frameset, model year 2022; rider height to size from a
+  retailer's reference chart (Bike Mart). Between ranges, the page shows both sizes and says a fitting
+  decides; the height ranges are called a starting point.
 - Saddle height from inseam: LeMond's method, inseam × 0.883, labelled as a starting point.
-- What is not size-specific in this model is said so: cockpit (100 mm stem, 420 mm bar) and 170 mm
-  cranks are shown as on the size 56.
-- Varsen is a concept. The colophon says so. No testimonials, prices, dates, stock or counters of
-  anything invented.
+- What is not size-specific in this model is said so: stem, bar and crank length are set at the fitting.
+- No testimonials, prices, weights, warranties, dates, stock or counters of anything invented. The only
+  service promised is the one that exists: the 30-minute video call on the owner's Calendly.
 
 ## Revisions after the first review (owner's words, verbatim)
 

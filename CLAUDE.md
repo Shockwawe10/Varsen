@@ -26,5 +26,11 @@ its checks are in `scrollcraft/builds/varsen/tools/` and run from the repo root.
 - **Motion:** after any change to scroll-driven motion, run
   `node scrollcraft/builds/varsen/tools/check-smoothness.mjs` on the working tree (port 4500) and on HEAD
   (`git archive HEAD`, served on port 4502), and quote both in the commit.
+- **Benchmarks:** compare Lighthouse mobile only as interleaved HEAD/tree pairs, at least 4 of each, the HEAD copy
+  from `git archive HEAD`; one run swings 81 to 97 here. To find a TBT cost, use the trace method in LESSONS.md
+  (2026-11-11), not feature toggles.
+- **Geometry:** after any change to `js/bike.js` geometry, run `node scrollcraft/builds/varsen/tools/check-overlaps.mjs`
+  (the root `qa/overlap.mjs` does not cover this build) and `node scrollcraft/builds/varsen/tools/render-posters.mjs`.
+  The chain's outer plates sit 0.1 mm from the neighbouring cogs.
 - **Commit and push** each verified unit of work to main (`.claude/skills/ub-mode`). Every number in a commit message
   comes from a run on that exact tree; run a variance claim twice before writing it.

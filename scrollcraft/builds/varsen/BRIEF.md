@@ -135,6 +135,15 @@ read the skill taste and place it whenever it feels right." Done per the taste s
 says what is sold): the line moved from the margin to directly above the headline, as a solid yellow NEW tag and the
 model line in the display face.
 
+**2026-11-14.** "make the chain more detailed, right now it looks a bit clunky" and "add the R1 logo at the front on
+the bike". Done: figure-of-eight plates with a rivet at every pin; an R1 badge on the front of the head tube.
+
+Then, with a generated logo image (assets/Gemini_Generated_Image_h2at00h2at00h2at.jpg, kept out of git): "I wanted
+to replace the logo with this one, but to remove the metallic blur and glitch that have on this the same as carbon".
+Done: its V traced as two flat shapes in the brand yellow (the hook, and the V with its top bar and outer stroke), the
+carbon slot left open; it replaced the old V in the folio mark, assets/mark.svg and the favicon. The wordmark below it
+in the image ("VARSEN / PERFORMANCE CYCLES") is not used yet: the owner has not said where it goes.
+
 ## Journey (authored, revised 2026-11-13)
 
 ```

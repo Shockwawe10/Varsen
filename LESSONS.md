@@ -37,3 +37,21 @@ Written by /aar-loop after each session's After Action Review. Read this file be
 - Actual: The whole redesign sat uncommitted across sessions until the owner said I had 'forgot to push'. Then one message said 'mobile 90' from a stale Lighthouse run (re-measured 89, reworded before push), and c6f906b says 'run to run within about 10%' before any repeat run: a later repeat held p95 within 7% but one max moved 24%.
 - Why: I treated 'not yet approved to replace the live root page' as 'do not commit', and wrote commit messages from memory of earlier measurements instead of the run on the tree being committed.
 - tags: git,process,commit,fix-applied (memory: commit-and-push-per-ub-mode.md, CLAUDE.md Varsen section)
+
+## 2026-11-14 -- Compare Varsen Lighthouse mobile only as interleaved HEAD/tree pairs, at least 4 of each (gzip servers on 4503 tree / 4504 HEAD archive); single runs on this machine swung from 81 to 97 on the same tree. To find what costs TBT, use the 2026-11-11 trace method (lighthouse --save-assets, RunTask events over 40 ms) instead of switching features off one at a time.
+- Expected: Find what in the chain and badge change cost about 40 ms of simulated TBT and remove it.
+- Actual: Feature toggles gave 82/87 (no badge) and 81/97 (no pins) on unchanged code, and a texture pre-upload made TBT worse (517, 522 against 425, 481). Only 4 interleaved pairs showed a stable answer (tree 86.75 against HEAD 87.75, then level after sharing the chain geometry).
+- Why: Machine load changes over minutes, so back-to-back runs of one variant are not comparable; the 2026-11-11 lesson already named the trace method, but this session never re-read LESSONS.md after the context reset and fell back to toggling.
+- tags: lighthouse,benchmarks,varsen,fix-proposed
+
+## 2026-11-14 -- After any change to scrollcraft/builds/varsen/js/bike.js geometry, run scrollcraft/builds/varsen/tools/check-overlaps.mjs (not only the root qa/overlap.mjs) and tools/render-posters.mjs. The tightest gap in the model is the chain's outer plates to the neighbouring cogs: 0.1 mm (cogs 3.6 mm apart, 1.6 mm thick), so nothing on the chain may stand more than about 0.07 mm proud of the outer plates.
+- Expected: Rivet heads 0.2 mm proud would clear everything; I had checked the gap to the derailleur cage (0.3 mm).
+- Actual: check-overlaps found the drive-side heads 0.34 mm into the 14T's teeth at p 0.668; lowered to 0.07 mm, 0 pairs in all seven sizes.
+- Why: I measured clearance against the part I was thinking about (the cage) and not the nearest one (the next cog). The scan caught it because it was run; CLAUDE.md names only the root site's overlap tool.
+- tags: geometry,overlaps,varsen,fix-proposed
+
+## 2026-11-14 -- A pointer-drag surface needs user-select: none and a cancelled dragstart, and its test must do two consecutive drags and one with the page scrolled (hero p 0.3): scrollcraft/builds/varsen/tools/check-drag.mjs test 4. A drawn angle of yaw x (1 - unwind) with yaw wrapped to +-pi jumps when it wraps; unwind the angle itself.
+- Expected: The earlier drag fix (check-drag tests 1-3) had closed the hero drag bugs.
+- Actual: The owner still saw the bike snap back when spinning with the page scrolled a little; reproducing it also showed the second drag died after one move (pointercancel).
+- Why: Tests 1-3 all ran at p = 0 and each began from a fresh page, so neither the scaled-and-wrapped angle nor the selection left by a first drag (which the browser then drags as content) was ever exercised.
+- tags: drag,pointer,varsen,fix-applied

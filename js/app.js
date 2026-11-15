@@ -928,13 +928,33 @@ const spotPos = spotEls.map(() => '');
 function placeSpots(cam, r) {
   if (detail.cur >= 0 || detail.anim) return;
   const b = gl.base; b.root.updateWorldMatrix(true, false);
-  PARTS.forEach((p, i) => {
+  let moved = false;
+  const qs = PARTS.map((p, i) => {
     const [x, y, z] = p.anchor(b.J), q = project(b, x, y, cam, r.width, r.height, z);
     const key = `${q[0].toFixed(1)},${q[1].toFixed(1)}`;
-    if (spotPos[i] === key) return;
-    spotPos[i] = key;
-    spotEls[i].style.transform = `translate(${q[0].toFixed(1)}px, ${q[1].toFixed(1)}px)`;
-    spotEls[i].classList.toggle('spot--left', q[0] > r.width * 0.72);   // near the right edge: the label goes left
+    if (spotPos[i] !== key) { spotPos[i] = key; spotEls[i].style.transform = `translate(${q[0].toFixed(1)}px, ${q[1].toFixed(1)}px)`; moved = true; }
+    return q;
+  });
+  if (moved) sideLabels(qs, r);
+}
+/* Each label takes the side of its point (right, or left) that covers the least of the other points and of the labels
+   already placed, and stays inside the plate. On a phone the plate is narrow and the points close: with every label on
+   the right, Frame ran into Cockpit and Brakes into Drivetrain. Greedy, in PARTS order; right wins a tie. */
+const labelW = [], labelH = [];
+function sideLabels(qs, r) {
+  // dot radius plus a 3 px margin, the label's offset from its point (CSS: 22 - 8), and a 3 px margin round each label
+  const DOT = 14, GAP = 14, M = 3;
+  qs.forEach((q, i) => { const l = spotEls[i].querySelector('.spot__label'); labelW[i] ||= l.offsetWidth; labelH[i] ||= l.offsetHeight; });
+  const area = (a, c) => Math.max(0, Math.min(a[2], c[2]) - Math.max(a[0], c[0])) * Math.max(0, Math.min(a[3], c[3]) - Math.max(a[1], c[1]));
+  const box = (q, i, left) => { const h = labelH[i] / 2 + M; return left ? [q[0] - GAP - labelW[i] - M, q[1] - h, q[0] - GAP + M, q[1] + h] : [q[0] + GAP - M, q[1] - h, q[0] + GAP + labelW[i] + M, q[1] + h]; };
+  const dots = qs.map(q => [q[0] - DOT, q[1] - DOT, q[0] + DOT, q[1] + DOT]), placed = [];
+  qs.forEach((q, i) => {
+    const cost = left => {
+      const bx = box(q, i, left), inside = area(bx, [0, 0, r.width, r.height]), w = bx[2] - bx[0], h = bx[3] - bx[1];
+      return dots.reduce((s, d, j) => s + (j === i ? 0 : area(bx, d)), 0) + placed.reduce((s, p) => s + area(bx, p), 0) + (w * h - inside) * 2;
+    };
+    const left = cost(true) < cost(false);
+    spotEls[i].classList.toggle('spot--left', left); placed.push(box(q, i, left));
   });
 }
 function flyTo(i) {

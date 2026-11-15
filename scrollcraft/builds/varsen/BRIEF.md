@@ -144,6 +144,12 @@ Done: its V traced as two flat shapes in the brand yellow (the hook, and the V w
 carbon slot left open; it replaced the old V in the folio mark, assets/mark.svg and the favicon. The wordmark below it
 in the image ("VARSEN / PERFORMANCE CYCLES") is not used yet: the owner has not said where it goes.
 
+**2026-11-15.** "I don't want the customer user just wanted this link in the footer. Maybe next to the section where
+the book is fitting. They links for the Facebook and X is just gonna be facebook.com and x.com." Done: a Facebook,
+Telegram and X row in the colophon under Book a fitting. Telegram opens the owner's bot, t.me/varsen_fit_bot (looked up
+from the bot token with getMe; the token is never written to the page or the repo). Facebook and X go to the sites' home
+pages until the brand pages exist. No testimonials: the owner does not want them.
+
 ## Journey (authored, revised 2026-11-13)
 
 ```

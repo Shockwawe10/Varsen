@@ -477,6 +477,10 @@ main { padding-left: var(--folio-w); }
 .colophon { padding: var(--sc-7) var(--sc-gutter) calc(var(--sc-7) + env(safe-area-inset-bottom)); border-top: 1px solid var(--hair); display: grid; gap: var(--sc-3); font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
 .colophon p { margin: 0; max-width: 78ch; }
 .colophon b { color: var(--sc-ink); }
+.social { display: flex; flex-wrap: wrap; gap: 0 var(--sc-5); margin: 0; padding: 0; list-style: none; }
+.social a { display: inline-flex; align-items: center; gap: var(--sc-2); min-height: 44px; color: var(--sc-ink); font-weight: 600; text-decoration: none; }
+.social svg { width: 1.25rem; height: 1.25rem; fill: currentColor; flex: none; }
+@media (hover: hover) and (pointer: fine) { .social a:hover span { text-decoration: underline; text-underline-offset: 0.2em; } }
 
 /* ---------------------------------------------------------------- phones */
 @media (max-width: 860px) {

@@ -1,5 +1,5 @@
 // Scroll smoothness of the Varsen build, measured:
-//   node scrollcraft/builds/varsen/tools/check-smoothness.mjs [label] [w] [h] [port] [dpr]
+//   node tools/check-smoothness.mjs [label] [w] [h] [port] [dpr]
 // Scrolls the whole page twice, the way people do, with the page's own trace on (window.__bike.trace):
 //   wheel     notches of 100 px in bursts, each animated the way browsers animate a wheel notch (scrollBy, smooth);
 //   trackpad  a steady stream of small deltas, applied at once (as a trackpad sends them).

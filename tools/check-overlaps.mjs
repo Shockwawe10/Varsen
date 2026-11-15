@@ -1,9 +1,9 @@
 // Interpenetration scan of the Varsen build: the size-56 assembly over its whole build progress, then every size assembled.
-// node scrollcraft/builds/varsen/tools/check-overlaps.mjs (from the repo root; the build served on port 4500). Writes lab-overlaps.json.
+// node tools/check-overlaps.mjs (from the repo root; the site served on port 4500). Writes lab-overlaps.json.
 import { chromium } from 'playwright';
 import fs from 'node:fs';
-import { overlapScan } from '../../../../qa/overlap-core.mjs';
-import { fits } from '../../../../qa/tests/spec-data.mjs';
+import { overlapScan } from '../qa/overlap-core.mjs';
+import { fits } from '../qa/tests/spec-data.mjs';
 const b = await chromium.launch({ channel: 'chrome', args: ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist'] });
 const page = await b.newPage({ viewport: { width: 1200, height: 800 } });
 page.on('pageerror', e => console.log('PAGEERROR', String(e).slice(0, 300)));

@@ -1,4 +1,4 @@
-// Camera clearance on In detail's flights: node scrollcraft/builds/varsen/tools/check-detail-clearance.mjs [port]
+// Camera clearance on In detail's flights: node tools/check-detail-clearance.mjs [port]
 // Every flight a visitor can start from rest: the overview to each part and back, and each Previous / Next step
 // (part i to i + 1, wrapping, both ways). Each is sampled at 200 points with the page's own camera maths
 // (window.__bike.detailCam) at plate aspects 0.6 to 1.5, and the camera's distance is taken to every part's world

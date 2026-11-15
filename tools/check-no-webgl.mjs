@@ -1,4 +1,4 @@
-// The Varsen build with WebGL unavailable: node scrollcraft/builds/varsen/tools/check-no-webgl.mjs <tag> <w> <h> [lost]
+// The Varsen build with WebGL unavailable: node tools/check-no-webgl.mjs <tag> <w> <h> [lost]
 // "lost" loads with WebGL, then forces a context loss (WEBGL_lose_context) to test the same fallback mid-visit.
 import { chromium } from 'playwright';
 import { execFileSync } from 'node:child_process';

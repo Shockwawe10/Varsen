@@ -1,5 +1,5 @@
 // Renders the no-WebGL posters from the live scene into assets/posters/*.webp.
-//   node scrollcraft/builds/varsen/tools/render-posters.mjs [url]
+//   node tools/render-posters.mjs [url]
 // Needs the build served (the scroll-craft serve.mjs on port 4500) and Playwright with Chrome. Re-run after any change
 // to the model, the materials or a plate's camera: the posters must show the scene the page renders.
 import { chromium } from 'playwright';

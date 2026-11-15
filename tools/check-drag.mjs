@@ -1,4 +1,4 @@
-// The hero's drag-to-turn: node scrollcraft/builds/varsen/tools/check-drag.mjs [port]
+// The hero's drag-to-turn: node tools/check-drag.mjs [port]
 // 1. drag left fast, reverse right a short way, release: the bike must keep turning right (the way the finger last moved)
 // 2. drag, hold still 300 ms, release: the bike must not move after release
 // 3. touch-drag on a 3x phone with 400 ms holds: no sharp-at-rest pass may run while the finger is down

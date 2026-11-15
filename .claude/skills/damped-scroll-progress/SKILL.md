@@ -16,7 +16,7 @@ description: Turn native scroll into one damped progress value p that drives a 3
   ```
   Prefer it to the first-order follow `pShown += (goal - pShown) * (1 - exp(-dt / tau))`: that one jumps to
   full speed the instant the goal moves, so every wheel notch shows as a jolt. Measured on the Varsen build
-  (scrollcraft/builds/varsen/tools/check-smoothness.mjs, same input): camera acceleration p95 down 5 to 21x.
+  (tools/check-smoothness.mjs, same input): camera acceleration p95 down 5 to 21x.
   Keep looping while `vel !== 0`, not only while `pShown !== goal`.
 - **dt:** clamp to 0.1 s. After an idle stretch, the first frame uses dt = 1/60 rather than the gap, and
   **never 0**: a follow given dt = 0 that treats it as "snap to goal" makes every scroll that starts from

@@ -1,4 +1,4 @@
-// The Varsen build with JavaScript off: node scrollcraft/builds/varsen/tools/check-no-js.mjs <w> <h>
+// The Varsen build with JavaScript off: node tools/check-no-js.mjs <w> <h>
 import { chromium } from 'playwright';
 import { execFileSync } from 'node:child_process';
 const [w = '1440', h = '900'] = process.argv.slice(2);

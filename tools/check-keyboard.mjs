@@ -1,4 +1,4 @@
-// Keyboard walk of the Varsen build: node scrollcraft/builds/varsen/tools/check-keyboard.mjs [w] [h]
+// Keyboard walk of the Varsen build: node tools/check-keyboard.mjs [w] [h]
 // Tabs from the top, logs every stop (what it is, whether it is on screen, whether a focus ring is drawn),
 // then exercises the skip link, the folio and the size chooser from the keyboard.
 import { chromium } from 'playwright';

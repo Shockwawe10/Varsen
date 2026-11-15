@@ -1,4 +1,4 @@
-// No bare half screen in a pinned act: node scrollcraft/builds/varsen/tools/check-coverage.mjs [port]
+// No bare half screen in a pinned act: node tools/check-coverage.mjs [port]
 // Why: the scroll-craft dead-scroll check passes as long as any pixel moves, so a 3D bike turning above a faded-out
 // copy block read as green (the iPhone hero gap, fixed in 962c495). This steps each pinned act (every section with
 // data-sc-act="pin", read from the page) through its pin in 5% steps at 390x844 and 1440x900, screenshots each frame, and counts content pixels in the top

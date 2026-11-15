@@ -1,4 +1,4 @@
-// Screenshot the Varsen build at section positions: node scrollcraft/builds/varsen/tools/sweep.mjs <tag> <w> <h> <spec> [query] [engine]
+// Screenshot the Varsen build at section positions: node tools/sweep.mjs <tag> <w> <h> <spec> [query] [engine]
 // spec: "front:0,front:0.5,chart:0.45,build:0.3" -> section id : progress through it (0 = its top at the viewport top)
 import { chromium, webkit } from 'playwright';
 import { execFileSync } from 'node:child_process';

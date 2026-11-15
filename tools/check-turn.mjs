@@ -1,4 +1,4 @@
-// Turn the hero bike through 360 degrees (arrow keys, 45-degree steps) and sheet the frames: node scrollcraft/builds/varsen/tools/check-turn.mjs <tag>
+// Turn the hero bike through 360 degrees (arrow keys, 45-degree steps) and sheet the frames: node tools/check-turn.mjs <tag>
 import { chromium } from 'playwright';
 import { execFileSync } from 'node:child_process';
 const tag = process.argv[2] || 'turn';

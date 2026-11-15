@@ -518,17 +518,30 @@ function project(bike, xmm, ymm, cam, w, h, zmm = 0) {
   _p.set(xmm * MM, ymm * MM, zmm * MM); bike.root.localToWorld(_p); _p.project(cam);
   return [(_p.x + 1) / 2 * w, (1 - _p.y) / 2 * h];
 }
+/* The lines are a technical drawing in screen space: reach and wheelbase exactly level, stack exactly upright, each end
+   at its measured point's own screen position, extension lines square to the line. (Drawn between projected 3D
+   points, the camera's 5 degree azimuth and 2 degree elevation tilted them a few pixels, and a 1 px line a few pixels
+   off level stair-steps.) Each line sits on the plate's own device-pixel grid: the plate is a compositor layer, placed on a
+   whole pixel whatever its fractional place on the page (snapping to the page position left the level lines two dim
+   rows). A 1 CSS px line is crisp on an even pixel ratio when its centre is on a device pixel boundary, on an odd ratio
+   when it is on a device pixel's centre. */
 function drawDims(name, spec, cam, w, h) {
   const D = DIMS[name]; if (!D || !spec?.bike) return;
   const b = spec.bike, J = b.J, c = b.chart, R = c.tyreOD / 2, ground = J.RA[1] - R;
   const P = (x, y) => project(b, x, y, cam, w, h);
   const xs = J.FA[0] + R + 55, yr = J.HTT[1] + 75, yw = ground - 50;       // stack ahead of the front tyre, reach above, wheelbase below
   const BB = P(0, 0), HTT = P(J.HTT[0], J.HTT[1]), RA = P(J.RA[0], J.RA[1]), FA = P(J.FA[0], J.FA[1]);
-  const s0 = P(xs, 0), s1 = P(xs, J.HTT[1]), r0 = P(0, yr), r1 = P(J.HTT[0], yr), w0 = P(J.RA[0], yw), w1 = P(J.FA[0], yw);
-  const pr = spec.p, part = (a, b2) => clamp01((pr - a) / (b2 - a)), f = n => n.toFixed(1);
+  const dpr = devicePixelRatio || 1, half = (Math.round(dpr) % 2) / 2, grid = v => (Math.round(v * dpr - half) + half) / dpr;
+  const gx = grid, gy = grid, mid = (a, z, i) => (a[i] + z[i]) / 2;
+  const xS = gx(mid(P(xs, 0), P(xs, J.HTT[1]), 0)), yR = gy(mid(P(0, yr), P(J.HTT[0], yr), 1)), yW = gy(mid(P(J.RA[0], yw), P(J.FA[0], yw), 1));
+  const s0 = [xS, gy(BB[1])], s1 = [xS, gy(HTT[1])], r0 = [gx(BB[0]), yR], r1 = [gx(HTT[0]), yR], w0 = [gx(RA[0]), yW], w1 = [gx(FA[0]), yW];
+  const pr = spec.p, part = (a, b2) => clamp01((pr - a) / (b2 - a)), f = n => n.toFixed(3);
   const seg = (ln, a, z) => { ln.setAttribute('x1', f(a[0])); ln.setAttribute('y1', f(a[1])); ln.setAttribute('x2', f(z[0])); ln.setAttribute('y2', f(z[1])); };
+  // an extension line leaves its point square to the dimension line: level ones for the upright stack, upright ones else
+  const foot = (from, a, vertical) => vertical ? [a[0], from[1]] : [from[0], a[1]];
   const draw = (d, from, a, z, k, name, value) => {
-    seg(d.ext[0], from[0], a); seg(d.ext[1], from[1], z);
+    const upright = a[0] === z[0];
+    seg(d.ext[0], foot(from[0], a, !upright), a); seg(d.ext[1], foot(from[1], z, !upright), z);
     seg(d.line, a, z); d.line.setAttribute('stroke-dashoffset', (1 - k).toFixed(3));
     const len = Math.hypot(z[0] - a[0], z[1] - a[1]) || 1, nx = -(z[1] - a[1]) / len * 5, ny = (z[0] - a[0]) / len * 5;
     for (const [t, p] of [[d.ticks[0], a], [d.ticks[1], z]]) seg(t, [p[0] - nx, p[1] - ny], [p[0] + nx, p[1] + ny]);

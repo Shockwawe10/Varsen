@@ -48,6 +48,7 @@ modules.
 | `qa/` | Shared test helpers and the live-site check |
 | `GEOMETRY.md`, `STORYBOARD.md` | The bike model's geometry and assembly spec |
 | `scrollcraft/builds/varsen/` | The design brief and plan |
+| `docs/3D-AND-DESIGN-GUIDE.md` | How to work with the 3D model, animation and design here, with every lesson learned |
 
 ## Sources
 

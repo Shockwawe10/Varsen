@@ -1,7 +1,8 @@
-// Varsen: the page. One fixed, transparent WebGL canvas draws the bike into every plate on screen (a scissor per
-// plate), each with its own camera and its own state: assembled, mid-assembly, or at another size. The scrollcraft
-// engine runs the cues, reveals and kinetic type; this file runs the plates, the detail tour, the chooser, the folio
-// and the booking. Render on demand only.
+// Varsen: the page. One WebGL renderer, its canvas kept off screen, draws the bike for every plate on screen, each with
+// its own camera and its own state (assembled, mid-assembly, or at another size), and copies the picture into that
+// plate's own 2D canvas, which the browser scrolls with the page. The scrollcraft engine runs the cues, reveals and
+// kinetic type; this file runs the plates, the detail tour, the chooser, the folio and the booking. Render on demand
+// only.
 import * as THREE from '../vendor/three@0.185.1/three.module.min.js';
 import { SIZES, BY_SIZE, sizesForHeight } from './sizes.js';
 import { makeMaterials, fadeSet, buildBike, buildSize, measureBuilt, validateGeometry, assembly, assertStages, STAGES, CHART, yieldToMain, slice, EASE } from './bike.js';
